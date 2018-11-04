@@ -18,13 +18,19 @@ close all;
 
 %% --------------------------Variation A
 
+
+
+
+%% -------------------------Variation C
+
 %----------Constants:
 T=80;
 pi=[0,5]; %initial position
 pf=[15,-15]; %final position
+A=[1 0 0.1 0; 0 1 0 0.1; 0 1 0 0.1; 0 0 0.9]
+B=[0 0; 0 0; 0.1 0; 0 0.1]
 
-plot(lin
 
-%----------Cost Function:
-%1st term (3rd wish)
-E=[1 0 0 0; 0 1 0 0};
+
+
+%Subject to:

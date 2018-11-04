@@ -18,13 +18,28 @@ close all;
 
 %% --------------------------Variation A
 
+
+
+
+%% -------------------------Variation C
+
 %----------Constants:
 T=80;
 pi=[0,5]; %initial position
 pf=[15,-15]; %final position
+A=[1 0 0.1 0; 0 1 0 0.1; 0 1 0 0.1; 0 0 0.9]
+B=[0 0; 0 0; 0.1 0; 0 0.1]
 
-plot(lin
 
-%----------Cost Function:
-%1st term (3rd wish)
-E=[1 0 0 0; 0 1 0 0};
+%% 4.2 Squared l-2  Formulation 
+
+cvx_begin quiet
+	variable x(t);
+	
+	minimize 
+
+	subject to
+	x(0)=pi
+	x(T)=pf
+	norm(u,2)=<Umax
+	x(t+1)=A*x(t)+B*u(t)

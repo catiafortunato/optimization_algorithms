@@ -10,7 +10,7 @@
 % Joao Carvalho
 % -------Supervision by------%
 % Profesor João Xavier
-%test
+%test2
 
 %%
 clear all;

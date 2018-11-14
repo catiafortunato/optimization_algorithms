@@ -28,7 +28,7 @@ close all;
 
 %-----------------------4.2 Squared l-2  Formulation--------------
 
-
+asda
 %----------Constants:
 T=80;
 ci=[0;5;0;0]; %initial condition

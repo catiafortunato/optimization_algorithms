@@ -22,7 +22,7 @@ cvx_begin quiet
         obj1=obj1+square_pos(square_pos(norm(x(1:2,tk(i))-C(:,i)))-r^2);
     end
     for i=2:T
-        obj2=obj2+lambda*norm(u(:,i)-u(:,i-1),1);
+        obj2=obj2+norm(u(:,i)-u(:,i-1),1);
     end
     
     minimize(obj1+lambda*obj2)

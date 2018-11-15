@@ -28,7 +28,7 @@ close all;
 
 %-----------------------4.2 Squared l-2  Formulation--------------
 
-asda
+
 %----------Constants:
 T=80;
 ci=[0;5;0;0]; %initial condition
@@ -67,7 +67,6 @@ cvx_begin quiet
         f=f+square_pos(norm(x(1:2,ts(i))-W(:,i),2));
     end
    
-    %Matricial Definition
     
     
     minimize(f)
@@ -99,7 +98,9 @@ scatter(W(1,:),W(2,:),'x','r')
 
 
 %% b) Optimal Control Signal u(t)=(u1(t),u2(t)) (t=0:T-1)
-figure(2)
+fig=figure(2);
+set(fig,'units','normalized','outerposition',[0 0 1 1])
+
 plot(1:80,u(1,:),1:80,u(2,:))
 legend({'u1(t)','u2(t)'})
 xlabel('Time stamp')
@@ -142,37 +143,40 @@ B=[0 0;
     0 0.1];
 
 Umax=15;
+
 disp('Constants loaded in 4.3')
 
 %% ------------Model:
 cvx_begin quiet
-%Initializations
-variable x(4,T);
-variable u(2,T);
-f=0;
+    %Initializations
+    variable x(4,T);
+    variable u(2,T);
+    f=0;
 
-%Define Objective Function
-for i=1:K
-    f=f+norm(x(1:2,ts(i))-W(:,i),2);
-end
+    %Define Objective Function
+    for i=1:K
+        f=f+norm(x(1:2,ts(i))-W(:,i),2);
+    end
 
-minimize(f)
+    minimize(f)
 
-subject to
+    subject to
 
-x(1:2,1)==pi; %not assuming vi=0
-x(1:2,T)==pf; %not assuming vf =0
-for i=1:T
-    norm(u(:,1),2)<=Umax;
-end
+%         x(1:2,1)==pi; %not assuming vi=0
+%         x(1:2,T)==pf; %not assuming vf=0
+        x(:,1)==ci; %assuming vi=0
+        x(:,T)==cf; %assuming vf=0
+        for i=1:T
+            norm(u(:,i),2)<=Umax;
+        end
 
-for i=2:T
-    x(:,i)==A*x(:,i-1)+B*u(:,i-1);
-end
+        for i=2:T
+            x(:,i)==A*x(:,i-1)+B*u(:,i-1);
+        end
 
-for i=1:K
-    x(1:2,ts(i))==W(:,i);
-end
+%         for i=1:K
+%             x(1:2,ts(i))==W(:,i);
+%         end
 
 cvx_end
 
@@ -192,7 +196,7 @@ scatter(W(1,:),W(2,:),'x','r')
 
 
 %% b) Optimal Control Signal u(t)=(u1(t),u2(t)) (t=0:T-1)
-fig=figure(3)
+fig=figure(3);
 set(fig,'units','normalized','outerposition',[0 0 1 1])
 
 plot(1:80,u(1,:),1:80,u(2,:))
@@ -205,7 +209,7 @@ title('Optimal control signal')
 %% C) How many waypoints are captured?
 thrs=10^-6;
 a=zeros(1,6);
-for i=1:k
+for i=1:K
     if x(1:2,ts(i))-W(:,i)<thrs
         a(i)=1;
     end
@@ -248,16 +252,24 @@ disp('Constants loaded in 4.4')
 x_it=x;
 u_it=u;
 
+close all
 
 %Prep Figures for plots
 fig=figure(1);
 set(fig,'units','normalized','outerposition',[0 0 1 1])
+fig2=figure(2);
+set(fig2,'units','normalized','outerposition',[0 0 1 1])
 out_wpoints=zeros(10,6);
 
 %------------Model:
 for m=0:M-1
     cvx_begin quiet
-    
+    disp('running')
+    if m==M-2
+        disp('almost there')
+    end           
+        
+        
     %Initializations
     variable x(4,T);
     variable u(2,T);
@@ -273,21 +285,22 @@ for m=0:M-1
     minimize(f)
     
     subject to
-    x(1:2,1)==pi; %not assuming vi=0
-    x(1:2,T)==pf; %not assuming vf =0
-    
-    for i=T
-        norm(u(:,1),2)<=Umax;
-    end
-    
-    for i=2:T
-        x(:,i)==A*x(:,i-1)+B*u(:,i-1);
-    end
-    
-    for i=1:K
-        x(1:2,ts(i))==W(:,i);
-    end
-    
+
+%         x(1:2,1)==pi; %not assuming vi=0
+%         x(1:2,T)==pf; %not assuming vf=0
+        x(:,1)==ci; %assuming vi=0
+        x(:,T)==cf; %assuming vf=0
+        for i=1:T
+            norm(u(:,i),2)<=Umax;
+        end
+
+        for i=2:T
+            x(:,i)==A*x(:,i-1)+B*u(:,i-1);
+        end
+
+%         for i=1:K
+%             x(1:2,ts(i))==W(:,i);
+%         end
     
     cvx_end
     
@@ -296,14 +309,15 @@ for m=0:M-1
     u_it=u;
     
     %a) plot positions in each iteration (t=0:T); mark position for tk, (1<=k<=K)
-    subplot(10,2,m*2+1)
+    figure(1)
+    subplot(5,2,m+1)
     scatter(x(1,:),x(2,:)); hold on;
     scatter(W(1,:),W(2,:),'x','r')
 
     
     %b) plot control signal for each iteration Control Signal u(t)=(u1(t),u2(t)) (t=0:T-1)
-    
-    subplot(10,2,m*2+2)
+    figure(2)
+    subplot(5,2,m+1)
     
     plot(1:80,u(1,:),1:80,u(2,:))
     legend({'u1(t)','u2(t)'})
@@ -315,14 +329,11 @@ disp('Optimization Solved in 4.4')
 
 %% C) How many waypoints are captured?
 thrs=10^-6;
-for i=1:k
+for i=1:K
     if x(1:2,ts(i))-W(:,i)<thrs
         out_wpoints(m+1,i)=1;
     end
 end
-n_wpoints=out_wpoints*ones(10,1);
+n_wpoints=out_wpoints'*ones(10,1);
 disp(n_wpoints)
 
-
-
-disp('Optimization Solved in 4.4')

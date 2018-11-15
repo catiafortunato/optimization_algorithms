@@ -46,20 +46,7 @@ lambda0=1;epsilon=10^-6;
 
 cvx_begin quiet
 variable S_u(2,8)
-
-%Definition of the cost function
-f=(A(:,iA(:,1))-S_u(:,iA(:,2)))'* %cENA QUE O PROF FEZ!!
-
-ones(2,1))-y(iA))
-
-k=0;
-while !convergence:
-    %1. compute gradient
-    %2. evaluate stopping criterion
-    %3. solve optimization problem
-    %4. Evaluate if better + update lambda
-    %5. update k
-    
+f=norm(A(:,iA(:,1))-
 
 
 k=0;

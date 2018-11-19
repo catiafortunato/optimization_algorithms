@@ -1,6 +1,6 @@
 
 %-------------------------Otimization and Algorithms----------------------%
-%-------------------------------Projet - Part 1 --------------------------%
+%-------------------------------Projet - Part 2 --------------------------%
 %-------------------------------------------------------------------------%
 
 
@@ -42,26 +42,30 @@ z=data.z; %Noisy Measurements (sensor, sensor)
 lambda0=1;epsilon=10^-6;
 
 %% Running the LM Model
-% Definition of objective function
-
 cvx_begin quiet
-variable S_u(2,8)
+    %Definition of the optimization variable
+    S=zeros(2,8);
 
-%Definition of the cost function
-f=(A(:,iA(:,1))-S_u(:,iA(:,2)))'* %cENA QUE O PROF FEZ!!
+    %Definition of the cost function
+    f1_aux=vecnorm(A(:,iA(:,1))-S(:,iA(:,2)))-y;
+    f1=diag(f1_help'*f1_help)'*ones(16,1);
 
-ones(2,1))-y(iA))
+    f2_aux=vecvecnorm(S(:,iA(:,1))-S(:,iA(:,2)))-z;
+    f2=diag(f2_help'*f2_help)'*ones(24,1);
+
 
 k=0;
-while !convergence:
+convergence=0;
+while b==False
+    a=1;
+    gk=
     %1. compute gradient
     %2. evaluate stopping criterion
     %3. solve optimization problem
     %4. Evaluate if better + update lambda
     %5. update k
     
-
-
+end
 k=0;
 % for 
     

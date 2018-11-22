@@ -38,27 +38,41 @@ iS=data.iS; %Pair if (sensor sensor)
 y=data.y; %Noisy measurerments (anchor, sensor)
 z=data.z; %Noisy Measurements (sensor, sensor)
 
-%Hiperparameters
-lambda0=1;epsilon=10^-6;
+xinit=data.xinit;
+
+
 
 %% Running the LM Model
 
 
+%1. Hiperparameters
+lambdak=1;epsilon=10^-6;x_k=xinit;
 
+%2. Set k=0
 k=0;
 convergence=0;
-while b==False
-    a=1;
-    gk=
-    %1. compute gradient
-    %2. evaluate stopping criterion
-    %3. solve optimization problem
-    %4. Evaluate if better + update lambda
-    %5. update k
+%3. Start Loop
+while convergence==0
     
+    %4. Compute Gradient
+    G_xk=F_grad(x_k);
+    %5. Check Stopping Criterion
+    if (norm(G_xk)<epsilon)
+        break
+    end
+    
+    %6. Solve the Standard Least-Square Problem
+    x_khat=1;
+    %7. Evaluate if better + update lambda
+    if F(x_k1_hat)<F(x_k)
+        x_k=x_khat;
+        lambdak=0.7*lambdak;
+    else 
+        lambdak=2*lambdak
+    end
+    %8. update k
+        k=k+1:
 end
-k=0;
-% for 
     
     
 

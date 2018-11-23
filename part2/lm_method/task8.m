@@ -68,10 +68,10 @@ while convergence==0
         x_k=x_khat;
         lambdak=0.7*lambdak;
     else 
-        lambdak=2*lambdak
+        lambdak=2*lambdak;
     end
     %8. update k
-        k=k+1:
+%         k=k+1:
 end
     
     

@@ -14,6 +14,7 @@ P=[s r];
 new_x = [X;ones(1,size(X,2))];
 
 % Vectorized implementation of the gradiente
-g=sum(new_x.*exp(P*new_x)./(1+exp(P*new_x)),2)- sum(new_x.*Y,2);
+g=(1/K)*sum(new_x.*exp(P*new_x)./(1+exp(P*new_x)),2)- sum(new_x.*Y,2);
 
 % Vectorized implementation of Hessian 
+lap=(1/K)*new_x*new_x'*sum(exp(P*new_x)./(1+exp(P*new_x)).^2,2);

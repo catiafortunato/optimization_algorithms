@@ -8,7 +8,7 @@ A=[1 0 0.1 0; 0 1 0 0.1; 0 0 0.9 0; 0 0 0 0.9];
 b=[0 0; 0 0; 0.1 0; 0 0.1];
 k=6;
 
-cvx_begin quiet
+cvx_begin 
     variable x(4,T)
     variable u(2,T)
     obj1=0;
@@ -29,6 +29,3 @@ cvx_begin quiet
         end
 cvx_end
 
-%%
-figure(1); 
-scatter(x(1,:),x(2,:));

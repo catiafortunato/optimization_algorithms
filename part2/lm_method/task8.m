@@ -27,7 +27,7 @@ close all;
 %Load data
 
 data=load('lmdata1.mat');
-
+cd 
 xinit=data.xinit; %Initialization of the method 
 
 A=data.A; %Positions of anchors
@@ -39,7 +39,6 @@ y=data.y; %Noisy measurerments (anchor, sensor)
 z=data.z; %Noisy Measurements (sensor, sensor)
 
 xinit=data.xinit;
-
 
 
 %% Running the LM Model

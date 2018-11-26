@@ -10,6 +10,7 @@ cd
 % Joao Carvalho
 % -------Supervision by------%
 % Profesor João Xavier
+%test2
 
 %%
 clear all;
@@ -272,44 +273,44 @@ disp('Started Running model for 4.4')
 for m=0:M-1
     
     cvx_begin quiet
-        disp('running')
-        if m==M-2
-            disp('almost there')
-        end           
+    disp('running')
+    if m==M-2
+        disp('almost there')
+    end           
+        
+        
+    %Initializations
+    variable x(4,T);
+    variable u(2,T);
+    
+    f=0;
+    %Define Objective Function
+    for i=1:K
+        fi=norm(x(1:2,ts(i))-W(:,i),2);
+%         disp(fi)
+        weight=power((norm(x_it(1:2,ts(i))-W(:,i),2)+epsilon),-1);
+        disp(weight)
+        f=fi*weight+f;
+    end
+    
+    minimize(f)
+    
+    subject to
 
-
-        %Initializations
-        variable x(4,T);
-        variable u(2,T);
-
-        f=0;
-        %Define Objective Function
-        for i=1:K
-            fi=norm(x(1:2,ts(i))-W(:,i),2);
-    %         disp(fi)
-            weight=power((norm(x_it(1:2,ts(i))-W(:,i),2)+epsilon),-1);
-            disp(weight)
-            f=fi*weight+f;
+%         x(1:2,1)==pi; %not assuming vi=0
+%         x(1:2,T)==pf; %not assuming vf=0
+        x(:,1)==ci; %assuming vi=0
+        x(:,T)==cf; %assuming vf=0
+        for i=1:T
+            norm(u(:,i),2)<=Umax;
         end
 
-        minimize(f)
-
-        subject to
-
-    %         x(1:2,1)==pi; %not assuming vi=0
-    %         x(1:2,T)==pf; %not assuming vf=0
-            x(:,1)==ci; %assuming vi=0
-            x(:,T)==cf; %assuming vf=0
-            for i=1:T
-                norm(u(:,i),2)<=Umax;
-            end
-
-            for i=2:T
-                x(:,i)==A*x(:,i-1)+B*u(:,i-1);
-            end
+        for i=2:T
+            x(:,i)==A*x(:,i-1)+B*u(:,i-1);
+        end
     
     cvx_end
-    disp(x-x_it)
+    
     
     x_it=x;
     u_it=u;

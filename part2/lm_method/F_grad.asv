@@ -8,7 +8,7 @@ D_ss=repmat(S(:),1,8)-repmat(S,8,1);
 
 H=zeros(8,1);
 
- 
+
     
 
 out=S;

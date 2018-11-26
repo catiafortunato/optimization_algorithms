@@ -286,8 +286,8 @@ for m=0:M-1
         %Define Objective Function
         for i=1:K
             fi=norm(x(1:2,ts(i))-W(:,i),2);
-    %         disp(fi)
-            weight=power((norm(x_it(1:2,ts(i))-W(:,i),2)+epsilon),-1);
+    %         disp(fi)    
+            weight=power((norm(x_it(1:2,ts(i))-W(:,i))+epsilon),-1);
             disp(weight)
             f=fi*weight+f;
         end
@@ -309,7 +309,7 @@ for m=0:M-1
             end
     
     cvx_end
-    disp(x-x_it)
+%     disp(x-x_it)
     
     x_it=x;
     u_it=u;

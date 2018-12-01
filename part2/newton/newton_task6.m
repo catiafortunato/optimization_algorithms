@@ -1,8 +1,13 @@
 %% Task 6: 
 
-% Solve newton method for data set 1
-load data1.mat
-s=[-1,-1];
+% Choose the data 
+
+%load data1.mat
+%load data2.mat
+%load data3.mat
+load dataset4.mat
+
+s=-ones(1, size(X,1));
 r=0;
 epsilon=10^-6;
 alpha_hat=1;
@@ -16,7 +21,9 @@ new_x = [X;-ones(1,size(X,2))];
 g=ones(size(new_x,1));
 
 G=[];
+A=[];
 
+tic()
 
 while norm(g) > epsilon
     % Vectorized implementation of the gradiente
@@ -33,7 +40,33 @@ while norm(g) > epsilon
     end
     % Update the variables
     P=P+alpha*d';
+    A=[A alpha];
     % compute the iteration number
     k=k+1;
 
 end
+toc()
+%% Plots
+
+% Plot the alphas 
+figure(1)
+stem(1:k,A, 'filled')
+xlabel('Iteration k')
+ylabel('Alpha value')
+axis([1 k 0 1])
+title('Alpha values for each iteration of Newton Method')
+
+% Plot norm of gradient
+
+gplot=zeros(1,k);
+for i=1:k
+    gplot(i)=norm(G(:,i));
+end
+
+figure(2)
+p=semilogy(1:k,gplot)
+p.LineWidth = 2;
+xlabel('Iteration k')
+axis([1 k 10^-9 10])
+ylabel('||g||')
+title(' Gradient norm of Newton Method')

@@ -59,20 +59,33 @@ for i=1:k
     
     hold on;
 end
-legend({'robot positions','regions'},'Location','southwest')
+
 xlabel('X coordinate')
 ylabel('Y coordinate')
+legend({'robot positions','regions'},'Location','southwest')
+for i=1:k
+    scatter(x(1,tk(i)),x(2,tk(i)),'filled','m')
+    
+end
+
 title('Optimal positions of the robot')
 
 %% b) Plot the optimal control signal
 figure(2)
-plot(1:80,u(1,:),1:80,u(2,:))
+p=plot(1:80,u(1,:),1:80,u(2,:))
+p(1).LineWidth=2;
+p(2).LineWidth=2;
 legend({'u1(t)','u2(t)'})
 xlabel('Time stamp')
 ylabel('Control signal intensity')
 title('Optimal control signal')
 
-%% c) 
+%% d) 
+
+pk=zeros(2,k);
+for i=1:k
+    pk(:,i)=x(1:2,tk(i));
+end
 
     
 

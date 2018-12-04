@@ -25,9 +25,8 @@ close all;
 %% Initialization of the problem
 
 %Load data
-
+cd 'C:\JFCImportantes\Universidade\5º Ano - 1º Semestre\OA\Project\optimization_algorithms\part2\lm_method'
 data=load('lmdata1.mat');
-cd 
 xinit=data.xinit; %Initialization of the method 
 
 A=data.A; %Positions of anchors
@@ -38,7 +37,6 @@ iS=data.iS; %Pair if (sensor sensor)
 y=data.y; %Noisy measurerments (anchor, sensor)
 z=data.z; %Noisy Measurements (sensor, sensor)
 
-xinit=data.xinit;
 
 
 %% Running the LM Model
@@ -56,12 +54,14 @@ while convergence==0
     %4. Compute Gradient
     G_xk=F_grad(x_k);
     %5. Check Stopping Criterion
-    if (norm(G_xk)<epsilon)
+    if (norm(F_xk)<epsilon)
         break
     end
     
     %6. Solve the Standard Least-Square Problem
-    x_khat=1;
+    A=[G_xk lambdak;
+    b=
+    x_khat=pinv(;
     %7. Evaluate if better + update lambda
     if F(x_k1_hat)<F(x_k)
         x_k=x_khat;

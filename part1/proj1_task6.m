@@ -49,7 +49,7 @@ for i=1:k
     cy = C(2,i);
 
     n = 50;                           % 50 point approximation
-    R = 1;                            % Unit radius
+    R = 2;                            % Unit radius
     angle = 0:2*pi/n:2*pi;            % vector of angles at which points are drawn
 
     x1 = cx+R*cos(angle);  y1 = cy+R*sin(angle); % Coordinates of circle

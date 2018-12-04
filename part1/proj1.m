@@ -6,10 +6,10 @@ cd
 
 % --------Work by:------%
 % Catia Fortunato
-% Maria Inês Diegues
+% Maria In?s Diegues
 % Joao Carvalho
 % -------Supervision by------%
-% Profesor João Xavier
+% Profesor Jo?o Xavier
 
 %%
 clear all;
@@ -301,7 +301,7 @@ for m=0:M-1
             x(:,1)==ci; %assuming vi=0
             x(:,T)==cf; %assuming vf=0
             for i=1:T
-                norm(u(:,i),2)<=Umax;
+                norm(u(:,i))<=Umax;
             end
 
             for i=2:T

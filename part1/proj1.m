@@ -222,6 +222,7 @@ disp(n_wpoints)
 
 %% -----------------------4.4 The Iterative Reweighting Technique-----------------
 %clear all
+x_0=x;
 %----------Constants:
 T=80;
 ci=[0;5;0;0]; %initial condition
@@ -256,7 +257,7 @@ disp('Constants loaded in 4.4')
 %% Task 11
 %Results from previous otpimization model
 x_it=x;
-u_it=u;
+
 
 
 %close all
@@ -266,6 +267,7 @@ thrs=10^-6;
 
 
 out_wpoints=zeros(10,6);
+weights=zeros(M,K);
 
 %------------Model:
 disp('Started Running model for 4.4')
@@ -286,10 +288,13 @@ for m=0:M-1
         %Define Objective Function
         for i=1:K
             fi=norm(x(1:2,ts(i))-W(:,i),2);
-    %         disp(fi)    
-            weight=power((norm(x_it(1:2,ts(i))-W(:,i))+epsilon),-1);
-            disp(weight)
-            f=fi*weight+f;
+%             disp(fi)    
+            %weight=power((norm(x_it(1:2,ts(i))-W(:,i))+epsilon),-1);
+            weight=norm(x_it(1:2,ts(i))-W(:,i),2)+epsilon;
+            weights(m+1,i)=1/weight;
+            disp(1/weight)
+            
+            f=fi/weight+f;
         end
 
         minimize(f)
@@ -309,10 +314,8 @@ for m=0:M-1
             end
     
     cvx_end
-%     disp(x-x_it)
     
     x_it=x;
-    u_it=u;
     
     %a) plot positions in each iteration (t=0:T); mark position for tk, (1<=k<=K)
     figure(3)

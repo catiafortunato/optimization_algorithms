@@ -87,6 +87,14 @@ for i=1:k
     pk(:,i)=x(1:2,tk(i));
 end
 
-    
+diff=abs(C-pk);
+
+dev=zeros(1,k);
+
+for i=1:k
+    dev(i)=norm(diff(:,i));
+end
+
+mean_dev=mean(dev);
 
  

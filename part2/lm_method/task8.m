@@ -134,23 +134,17 @@ while 1
     
     %6.--------- Solve the Standard Least-Square Problem
     
-    A=[H_grad_nsq'; G_grad_nsq';sqrt(lambda_k)*eye(16)];
+    A_mat=[H_grad_nsq'; G_grad_nsq';sqrt(lambda_k)*eye(16)];
     F_k=[D1_y;D2_z];
-    b=[A(1:40,:)*x_k-F_k;sqrt(lambda_k)*x_k];
-    %     A=[G_grad_nsq';sqrt(lambda_k)*eye(16)];
-    %     b=[G_grad_nsq'*x_k-F_k(17:40);sqrt(lambda_k)*x_k];
+    b=[A_mat(1:40,:)*x_k-F_k;sqrt(lambda_k)*x_k];
+
+    x_k_hat=pinv(A_mat)*b;
+%     x_k_hat=inv(A'*A)*A'*b;
+
+
     
-    x_k_hat=pinv(A)*b;
-    x_k_hat=inv(A'*A)*A'*b;
     
-    
-    %     cvx begin
-    %         variables x(16,1)
-    %         minimize square_pos(norm(sparse(double(A))*x-b,2))
-%     cvx end
-%     
-%     x_k_hat=x;
-    
+
     %%
     %7. Evaluate if better + update lambda
     %Build F(new_iteration)
@@ -166,18 +160,34 @@ while 1
     x_k=x_k_hat;
     
     if sum(F_k_hat)<sum(F_k.^2)
-        disp(F_k_hat<F_k)
+        
         x_k=x_k_hat;
         lambda_k=0.7*lambda_k;
     else
         lambda_k=2*lambda_k;
     end
-    
+    disp('-----')
+    disp(x_k')
     %8. update k
     iteration=iteration+1;
 end
 
+%%
+figure(1);
+semilogy(norms,'Color','b');
+grid on
+grid minor
 
+figure(2);
+x_k=reshape(x_k',2,[])';A=A';
+xinit_plot=reshape(xinit',2,[])';
+scatter(x_k(:,1),x_k(:,2),'o','MarkerEdgeColor',[0 0.5 0.5]); hold on;
+scatter(A(:,1),A(:,2),'x','MarkerFaceColor',[0.3 1 0.7])
+scatter(xinit_plot(:,1),xinit_plot(:,2),'*','MarkerFaceColor',[0 1 1])
+
+axis([-15 15 -15 15])
+grid on
+grid minor
 
 
 

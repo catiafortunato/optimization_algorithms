@@ -18,28 +18,27 @@
 %-prep plots
 
 
+
+
 %% ---------------------------------------------------------------
 %%----------------------2. Network Localization-------------------
 %%----------------------------------------------------------------
 
-
 %% Initialization of the problem --- Task 9
 
-clear all;
-close all;
+clear all
+close all
 
 %Load data
+cd 'C:\JFCImportantes\Universidade\5º Ano - 1º Semestre\OA\Project\optimization_algorithms\part2\lm_method'
 data=load('lmdata2.mat');
-xinit=data.xinit; %Initialization of the method
 
 A=data.A; %Positions of anchors
-S=data.S; %True positions of sensors)
 iA=data.iA; %Pair of (anchor,sensor)
 iS=data.iS; %Pair if (sensor sensor)
 
 y=data.y; %Noisy measurerments (anchor, sensor)
 z=data.z; %Noisy Measurements (sensor, sensor)
-
 
 
 %% Defining the Auxiliary Matrices
@@ -64,97 +63,132 @@ E_help(:,1)=E_help(:,1)-ones(24,1);
 E_help=(reshape(E_help',48,1)-ones(48,1))*48+(1:48)';
 E2(E_help)=1;
 
-toc
+% toc
 %0.004293s
 %% Running the LM Model
-
-
-
-%1. Hiperparameters
-lambda_k=1;epsilon=10^-6;
-
-x_k=xinit;
-
-%2. Set k=0
-iteration=1;
-convergence=0;
-
-
-
-%3. Start Loop
-while 1
+tic
+Xs_out=[];
+Xs_in=[];
+for i=1:10000
+    %1. Hiperparameters
+    lambda_k=1;epsilon=10^-6;
+    xinit=rand(16,1)*15;
+    x_k=xinit;
+    Xs_in=[Xs_in x_k];
     
-    %4.----------Compute Gradient
+    %2. Set k=0
+    iteration=1;
+    convergence=0;
+    norms=[];
     
-    tic
-    %First Summation
-    D1=reshape(A_val-E1*x_k,[2,16]);
-    D1_norm=vecnorm(D1)';
-    D1_y=D1_norm-y; %Equivalent to the function H (without the square)
+    %%
     
-    H_grad_nsq=(E1'.*repmat(reshape((D1'./D1_norm)',32,1)',16,1));
-    H_grad=repmat((reshape((repmat(2*(D1_y),1,2))',32,1))',16,1).*H_grad_nsq;
-    
-    %     toc
-    %0.0024
-    
-    %Second Summation
-    %     tic
-    D2=reshape(E2*x_k,[2,24]);
-    D2_norm=vecnorm(D2)';
-    D2_z=D2_norm-z;%Equivalent to the function G (without the square)
-    
-    G_grad_nsq=(E2'.*repmat(reshape((D2'./D2_norm)',48,1)',16,1));
-    G_grad=repmat((reshape((repmat(2*(D2_z),1,2))',48,1))',16,1).*G_grad_nsq;
-    %     toc
-    %0.0046
-    
-    
-    %Gradient
-    %     tic
-    Gradient=sum(H_grad,2)+sum(H_grad,2);
-    disp(norm(Gradient))
-    %     toc
-    
-    %5. --------------- Check Stopping Criterion
-    if (norm(Gradient)<epsilon) || iteration>20
-        break
-        disp (iteration)
+    %3. Start Loop
+    while 1
         
+        %4.----------Compute Gradient
+        %%
+%         tic
+        %First Summation
+        D1=reshape(A_val+E1*x_k,[2,16]);
+        D1_norm=vecnorm(D1)';
+        D1_y=D1_norm-y; %Equivalent to the function H (without the square)
+        
+        H_grad_nsq=(E1'.*repmat(reshape((D1'./D1_norm)',32,1)',16,1));
+        H_grad_nsq=(H_grad_nsq(:,1:2:end)+H_grad_nsq(:,2:2:end));
+        H_grad=repmat(2*D1_y',16,1).*H_grad_nsq;
+        
+        %     toc
+        %0.0024
+        
+        %Second Summation
+        %     tic
+        D2=reshape(E2*x_k,[2,24]);
+        D2_norm=vecnorm(D2)';
+        D2_z=D2_norm-z;%Equivalent to the function G (without the square)
+        
+        G_grad_nsq=(E2'.*repmat(reshape((D2'./D2_norm)',48,1)',16,1));
+        G_grad_nsq=(G_grad_nsq(:,1:2:end)+G_grad_nsq(:,2:2:end));
+        G_grad=repmat(2*D2_z',16,1).*G_grad_nsq;
+        
+        %     toc
+        %%
+        %0.0046
+        
+        
+        %Gradient
+        %     tic
+        Gradient=sum(G_grad,2)+sum(H_grad,2);
+        grad_norm=norm(Gradient,2);
+        norms=[norms grad_norm];
+        %     toc
+        
+        %%
+        
+        %5. --------------- Check Stopping Criterion
+        if (grad_norm<epsilon) || iteration>20
+            break
+            disp(iteration)
+            
+        end
+        %%
+        
+        %6.--------- Solve the Standard Least-Square Problem
+        
+        A_mat=[H_grad_nsq'; G_grad_nsq';sqrt(lambda_k)*eye(16)];
+        F_k=[D1_y;D2_z];
+        b=[A_mat(1:40,:)*x_k-F_k;sqrt(lambda_k)*x_k];
+        
+        x_k_hat=pinv(A_mat)*b;
+        %     x_k_hat=inv(A'*A)*A'*b;
+        
+        
+        
+        
+        
+        %%
+        %7. Evaluate if better + update lambda
+        %Build F(new_iteration)
+        D1=reshape(A_val+E1*x_k_hat,[2,16]);
+        D1_norm=vecnorm(D1)';
+        D1_y=D1_norm-y;
+        
+        D2=reshape(E2*x_k_hat,[2,24]);
+        D2_norm=vecnorm(D2)';
+        D2_z=D2_norm-z;
+        F_k_hat=[D1_y;D2_z].^2;
+        
+        x_k=x_k_hat;
+        
+        if sum(F_k_hat)<sum(F_k.^2)
+            
+            x_k=x_k_hat;
+            lambda_k=0.7*lambda_k;
+        else
+            lambda_k=2*lambda_k;
+        end
+        %         disp('-----')
+        %         disp(x_k')
+        %8. update k
+        iteration=iteration+1;
     end
+    disp(i);
     
-    %6.--------- Solve the Standard Least-Square Problem
-    
-    A=[(H_grad_nsq(:,1:2:end)+H_grad_nsq(:,2:2:end))'; (G_grad_nsq(:,1:2:end)+G_grad_nsq(:,2:2:end))'; sqrt(lambda_k)*ones(1,16)];
-    b=[A(1:40,:)*x_k-[D1_y;D2_z];sum(sqrt(lambda_k)*x_k)];
-    
-    x_k_hat=pinv(A)*b;
-%     x_k_hat=inv(A'*A)*A'*b;
-    
-    
-    %7. Evaluate if better + update lambda
-    
-    F_k=sum([D1_y;D2_z]);
-    
-    %Build F(new_iteration)
-    D1=reshape(A_val-E1*x_k_hat,[2,16]);
-    D1_norm=vecnorm(D1)';
-    D1_y=D1_norm-y;
-    
-    D2=reshape(E2*x_k_hat,[2,24]);
-    D2_norm=vecnorm(D2)';
-    D2_z=D2_norm-z;
-    F_k_hat=sum([D1_y;D2_z]);
-    
-    x_k=x_k_hat;
-    lambda_k=0.7*lambda_k;
-%     if F_k_hat<F_k
-%         disp(F_k_hat<F_k)
-%         
-%     else
-%         lambda_k=2*lambda_k;
-%     end
-    
-    %8. update k
-    iteration=iteration+1;
+%     Xs_out=[Xs_out x_k];
+%     
+%    
+%     figure(2);
+%     clf
+%     x_k=reshape(x_k',2,[])';A=A';
+%     xinit_plot=reshape(xinit',2,[])';
+%     scatter(x_k(:,1),x_k(:,2),'o','MarkerEdgeColor',[0 0.5 0.5]); hold on;
+%     scatter(A(:,1),A(:,2),'x','MarkerFaceColor',[0.3 1 0.7])
+%     scatter(xinit_plot(:,1),xinit_plot(:,2),'*','MarkerFaceColor',[1 0 1])
+%     
+%     
+%     axis([-15 15 -15 15])
+%     grid on
+%     grid minor
+%     pause(1)
 end
+toc

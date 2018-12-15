@@ -4,8 +4,8 @@
 
 C=[10 20 30 30 20 10; 10 10 10 0 0 -10];
 r=2;
-T=80;
-tk=[10 25 30 40 50 60];
+T=81;
+tk=1+[10 25 30 40 50 60];
 Umax=100;
 k=6;
 lambda=0.1;
@@ -72,7 +72,7 @@ title('Optimal positions of the robot')
 
 %% b) Plot the optimal control signal
 figure(2)
-p=plot(1:80,u(1,:),1:80,u(2,:))
+p=plot(1:T,u(1,:),1:T,u(2,:))
 p(1).LineWidth=2;
 p(2).LineWidth=2;
 legend({'u1(t)','u2(t)'})

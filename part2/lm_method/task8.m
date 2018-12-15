@@ -172,6 +172,7 @@ while 1
     iteration=iteration+1;
 end
 
+x_k=reshape(x_k',2,[])';A=A';
 %%
 figure(1);
 semilogy(norms,'Color','b');
@@ -179,7 +180,7 @@ grid on
 grid minor
 
 figure(2);
-x_k=reshape(x_k',2,[])';A=A';
+
 xinit_plot=reshape(xinit',2,[])';
 scatter(x_k(:,1),x_k(:,2),'o','MarkerEdgeColor',[0 0.5 0.5]); hold on;
 scatter(A(:,1),A(:,2),'x','MarkerFaceColor',[0.3 1 0.7])

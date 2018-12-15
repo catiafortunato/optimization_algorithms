@@ -29,7 +29,7 @@ close all;
 clear all
 
 %----------Constants:
-T=80;
+T=80+1;
 ci=[0;5;0;0]; %initial condition
 pi=[0;5]; %initial position
 cf=[15;-15;0;0]; %final condition
@@ -37,7 +37,7 @@ pf=[15;-15]; %final position
 K=6;
 
 W=[10 20 30 30 20 10; 10 10 10 0 0 -10]; %matrix with the positions!
-ts=[10 25 30 40 50 60];
+ts=[10 25 30 40 50 60]+1;
 
 
 A=[1 0 0.1 0;
@@ -100,7 +100,7 @@ scatter(W(1,:),W(2,:),'x','r')
 fig=figure(2);
 set(fig,'units','normalized','outerposition',[0 0 1 1])
 
-plot(1:80,u(1,:),1:80,u(2,:))
+plot(1:T,u(1,:),1:T,u(2,:))
 legend({'u1(t)','u2(t)'})
 xlabel('Time stamp')
 ylabel('Control signal intensity')
@@ -123,7 +123,7 @@ disp(n_wpoints)
 
 %% ----------Constants:
 clear all
-T=80;
+T=80+1;
 ci=[0;5;0;0]; %initial condition
 pi=[0;5]; %initial position
 cf=[15;-15;0;0]; %final condition
@@ -131,7 +131,7 @@ pf=[15;-15]; %final position
 K=6;
 
 W=[10 20 30 30 20 10; 10 10 10 0 0 -10]; %matrix with the positions!
-ts=[10 25 30 40 50 60];
+ts=[10 25 30 40 50 60]+1;
 
 
 A=[1 0 0.1 0;
@@ -202,7 +202,7 @@ scatter(W(1,:),W(2,:),'x','r')
 fig=figure(3);
 set(fig,'units','normalized','outerposition',[0 0 1 1])
 
-plot(1:80,u(1,:),1:80,u(2,:))
+plot(1:T,u(1,:),1:T,u(2,:))
 legend({'u1(t)','u2(t)'})
 xlabel('Time stamp')
 ylabel('Control signal intensity')
@@ -224,7 +224,7 @@ disp(n_wpoints)
 %clear all
 x_0=x;
 %----------Constants:
-T=80;
+T=80+1;
 ci=[0;5;0;0]; %initial condition
 pi=[0;5]; %initial position
 cf=[15;-15;0;0]; %final condition
@@ -232,7 +232,7 @@ pf=[15;-15]; %final position
 K=6;
 
 W=[10 20 30 30 20 10; 10 10 10 0 0 -10]; %matrix with the positions!
-ts=[10 25 30 40 50 60];
+ts=[10 25 30 40 50 60]+1;
 
 
 A=[1 0 0.1 0;
@@ -258,13 +258,9 @@ disp('Constants loaded in 4.4')
 %Results from previous otpimization model
 x_it=x;
 
-
-
 %close all
 
 thrs=10^-6;
-
-
 
 out_wpoints=zeros(10,6);
 weights=zeros(M,K);
@@ -328,7 +324,7 @@ for m=0:M-1
     figure(4)
     subplot(5,2,m+1)
     
-    plot(1:80,u(1,:),1:80,u(2,:))
+    plot(1:T,u(1,:),1:T,u(2,:))
     legend({'u1(t)','u2(t)'})
     xlabel('Time stamp')
     ylabel('Control signal intensity')

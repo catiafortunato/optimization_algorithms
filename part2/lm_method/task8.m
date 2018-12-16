@@ -12,14 +12,6 @@
 % Profesor João Xavier
 
 
-%correr task 8
-%- prep plots
-%correr task 9
-%-prep plots
-
-
-
-
 %% ---------------------------------------------------------------
 %%----------------------2. Network Localization-------------------
 %%----------------------------------------------------------------
@@ -172,19 +164,23 @@ while 1
     iteration=iteration+1;
 end
 
-x_k=reshape(x_k',2,[])';A=A';
+
+%%
+x_k=reshape(x_k',2,[])';A_plot=A';S_plot=S';
 %%
 figure(1);
+clf
 semilogy(norms,'Color','b');
 grid on
 grid minor
 
 figure(2);
-
+clf
 xinit_plot=reshape(xinit',2,[])';
-scatter(x_k(:,1),x_k(:,2),'o','MarkerEdgeColor',[0 0.5 0.5]); hold on;
-scatter(A(:,1),A(:,2),'x','MarkerFaceColor',[0.3 1 0.7])
-scatter(xinit_plot(:,1),xinit_plot(:,2),'*','MarkerFaceColor',[0 1 1])
+scatter(x_k(:,1),x_k(:,2),'o','r'); hold on;
+scatter(A_plot(:,1),A_plot(:,2),'x','m')
+scatter(S_plot(:,1),S_plot(:,2),'x','b')
+scatter(xinit_plot(:,1),xinit_plot(:,2),'*','MarkerEdgeColor',[0 0.7 0.5])
 
 axis([-15 15 -15 15])
 grid on
